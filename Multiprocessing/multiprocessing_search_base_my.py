@@ -22,11 +22,11 @@ def compute(val):
         x = np.sin(x) + np.log1p(abs(x))
 
 # 전역 공유 변수 초기화
-def init_worker(shared_array_, stop_flag_):
-    global _shared_array
-    global _stop_flag
-    _shared_array = shared_array_
-    _stop_flag = stop_flag_
+# def init_worker(shared_array_, stop_flag_):
+#     global _shared_array
+#     global _stop_flag
+#     _shared_array = shared_array_
+#     _stop_flag = stop_flag_
 
 def worker_fn(start_end):
     global _shared_array, _stop_flag
@@ -64,14 +64,9 @@ if __name__ == '__main__':
     t1 = time.time()
 
     # 프로세스 풀 실행
-    with multiprocessing.Pool(
-        N_PROCESSES,
-        initializer=init_worker,
-        initargs=(shared_array, stop_flag)
-    ) as pool:
-        results = pool.map(worker_fn, ranges)
+    pool = multiprocessing.Pool(N_PROCESSES)
+    results = pool.map(worker_fn, ranges)
 
-    print('r', results)
     found_indices = [r for r in results if r is not None]
     t2 = time.time()
 
