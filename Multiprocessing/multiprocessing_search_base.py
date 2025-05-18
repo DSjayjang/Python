@@ -21,26 +21,29 @@ def compute(val):
     for _ in range(500):
         x = np.sin(x) + np.log1p(abs(x))
 
-# 전역 공유 변수 초기화
-def init_worker(shared_array_, stop_flag_):
+# 전역 변수 초기화
+def init_worker(shared_array, stop_flag):
     global _shared_array
     global _stop_flag
-    _shared_array = shared_array_
-    _stop_flag = stop_flag_
+    _shared_array = shared_array
+    _stop_flag = stop_flag
 
 def worker_fn(start_end):
     global _shared_array, _stop_flag
     start, end = start_end
+
     for i in range(start, end):
-        # 조기 종료 플래그 확인
+        # 플레그 확인
         if _stop_flag.value:
             return
         val = _shared_array[i]
         compute(val)
+
         if val == TARGET:
             with _stop_flag.get_lock():
                 _stop_flag.value = 1
             return i
+        
         if i % CHECK_EVERY == 0 and _stop_flag.value:
             return
     return
@@ -57,21 +60,19 @@ if __name__ == '__main__':
 
     # 인덱스 나누기
     chunk_size = SIZE // N_PROCESSES
-    ranges = [(i * chunk_size, (i + 1) * chunk_size if i != N_PROCESSES - 1 else SIZE)
-              for i in range(N_PROCESSES)]
+    ranges = [(i * chunk_size, (i + 1) * chunk_size if i != N_PROCESSES - 1 else SIZE) for i in range(N_PROCESSES)]
 
     # 병렬 처리
     t1 = time.time()
 
-    # 프로세스 풀 실행
     with multiprocessing.Pool(
         N_PROCESSES,
-        initializer=init_worker,
-        initargs=(shared_array, stop_flag)
+        initializer = init_worker,
+        initargs = (shared_array, stop_flag)
     ) as pool:
         results = pool.map(worker_fn, ranges)
 
-    print('r', results)
+    #found_indices
     found_indices = [r for r in results if r is not None]
     t2 = time.time()
 
