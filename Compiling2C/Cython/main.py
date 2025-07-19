@@ -1,6 +1,11 @@
 """Julia set generator without optional PIL-based image drawing"""
 import time
-import cythonfn3 as cythonfn
+import numpy as np
+
+import cythonfn as cythonfn
+# import cythonfn2 as cythonfn
+# import cythonfn3 as cythonfn
+# import cythonfn4 as cythonfn
 
 # area of complex space to investigate
 x1, x2, y1, y2 = -1.8, 1.8, -1.8, 1.8
@@ -29,6 +34,16 @@ def calc_pure_python(desired_width, max_iterations):
         for xcoord in x:
             zs.append(complex(xcoord, ycoord))
             cs.append(complex(c_real, c_imag))
+
+    """
+    아래 두 줄은
+    cythonfn4를 사용할 때만 활성화
+    """
+    # zs = np.array(zs, dtype=np.complex128)
+    # cs = np.array(cs, dtype=np.complex128)
+
+
+
 
     print("Length of x:", len(x))
     print("Total elements:", len(zs))
