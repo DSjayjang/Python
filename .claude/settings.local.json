@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c ' *)",
+      "Bash(python SWATCH/generate_ppt_figs.py)",
+      "Bash(python SWATCH/create_ppt.py)"
+    ]
+  }
+}
