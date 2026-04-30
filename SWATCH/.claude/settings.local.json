@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import json; f=open\\(r'c:\\\\Programming\\\\Github\\\\Python\\\\SWATCH\\\\SWATCH_MultivariateReg.ipynb','r',encoding='utf-8'\\); content=f.read\\(\\); print\\(content[:5000]\\)\")"
+    ]
+  }
+}
